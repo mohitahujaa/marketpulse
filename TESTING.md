@@ -12,23 +12,31 @@ This guide explains how to test all endpoints including admin-only routes.
 docker-compose up --build -d
 ```
 
-### 2. Create Admin User
+### 2. Access Default Admin Account
+
+**No setup needed!** A default admin account is automatically created on first startup.
 
 ```bash
-# Method 1: Using Python script
-docker-compose exec api python scripts/create_admin.py
-
-# Method 2: Manual registration then promote via database
-# Register normally, then in PostgreSQL:
-# UPDATE users SET role = 'admin' WHERE email = 'your@email.com';
+# Check the API logs to see the admin creation message:
+docker-compose logs api | grep -A 10 "DEFAULT ADMIN"
 ```
 
 **Default Admin Credentials:**
 - Email: `admin@marketpulse.com`
-- Password: `Admin@1234`
+- Password: `Admin@123456`
 - Role: `ADMIN`
 
-⚠️ **Change this password in production!**
+⚠️ **IMPORTANT: Change this password in production!**
+
+**Alternative Methods to Create Admin:**
+```bash
+# Method 1: Using Python script (creates additional admin)
+docker-compose exec api python scripts/create_admin.py
+
+# Method 2: Promote existing user via database
+# Register normally, then in PostgreSQL:
+docker-compose exec db psql -U marketpulse -c "UPDATE users SET role = 'admin' WHERE email = 'your@email.com';"
+```
 
 ---
 

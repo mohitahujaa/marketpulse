@@ -138,7 +138,15 @@ docker-compose logs api
 #### Quick Test
 
 ```bash
-# Register a new user
+# Login with default admin account
+curl -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@marketpulse.com",
+    "password": "Admin@123456"
+  }'
+
+# Or register a new user
 curl -X POST http://localhost:8000/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
@@ -147,7 +155,7 @@ curl -X POST http://localhost:8000/api/v1/auth/register \
     "password": "Test@1234"
   }'
 
-# Login
+# Login with your account
 curl -X POST http://localhost:8000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
@@ -239,15 +247,21 @@ pytest --cov=app --cov-report=html  # Generate HTML coverage report
 
 ### **Default Admin Account**
 
-The system includes a default admin account for testing:
+The system automatically creates a default admin account on first startup:
 
 ```
-Email: mohitahuja720@gmail.com
-Password: (set during first migration/setup)
-Role: ADMIN
+Email:    admin@marketpulse.com
+Password: Admin@123456
+Role:     ADMIN
 ```
 
-You can create additional admin accounts via the database or by promoting existing users.
+⚠️ **Important**: This account is created automatically when you first run the application. The credentials are displayed in the API logs on first startup.
+
+🔒 **Security**: Change this password immediately in production environments!
+
+You can create additional admin accounts via:
+- The database directly (update `role` column to `admin`)
+- Running: `docker-compose exec api python scripts/create_admin.py`
 
 ---
 

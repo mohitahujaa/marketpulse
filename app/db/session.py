@@ -37,12 +37,15 @@ class Base(DeclarativeBase):
 
 
 async def init_db() -> None:
-    """Create all tables on startup (dev convenience — use Alembic in production)."""
+    """Create all tables on startup and ensure default admin user exists."""
     from app.models import user, watchlist  # noqa: F401 — ensure models are registered
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database tables created/verified.")
+    
+    # Create default admin user if none exists
+    await _create_default_admin()
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -59,3 +62,61 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             raise
         finally:
             await session.close()
+
+
+# Alias for external use
+async_session_maker = AsyncSessionLocal
+
+
+async def _create_default_admin() -> None:
+    """
+    Create default admin user if it doesn't exist.
+    
+    Credentials:
+    - Email: admin@marketpulse.com
+    - Password: Admin@123456 (CHANGE IN PRODUCTION!)
+    - Role: ADMIN
+    """
+    from sqlalchemy import select
+    from app.models.user import User, UserRole
+    from app.core.security import hash_password
+    
+    default_admin_email = "admin@marketpulse.com"
+    
+    async with AsyncSessionLocal() as session:
+        try:
+            # Check if this specific admin user exists
+            result = await session.execute(
+                select(User).where(User.email == default_admin_email)
+            )
+            existing_admin = result.scalar_one_or_none()
+            
+            if existing_admin:
+                logger.info(f"Default admin user already exists: {default_admin_email}")
+                return
+            
+            # Create default admin user
+            admin_user = User(
+                email=default_admin_email,
+                username="admin",
+                hashed_password=hash_password("Admin@123456"),
+                role=UserRole.ADMIN,
+                is_active=True
+            )
+            
+            session.add(admin_user)
+            await session.commit()
+            
+            logger.info("=" * 60)
+            logger.info("🎉 DEFAULT ADMIN USER CREATED")
+            logger.info("=" * 60)
+            logger.info("Email:    admin@marketpulse.com")
+            logger.info("Password: Admin@123456")
+            logger.info("Role:     ADMIN")
+            logger.info("=" * 60)
+            logger.warning("⚠️  CHANGE THIS PASSWORD IN PRODUCTION!")
+            logger.info("=" * 60)
+            
+        except Exception as e:
+            logger.error(f"Failed to create default admin user: {e}")
+            await session.rollback()
