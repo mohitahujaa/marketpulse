@@ -46,13 +46,13 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         if settings.ENVIRONMENT == "production":
             response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         
-        # Content Security Policy
+        # Content Security Policy - allow CDN for API documentation (Swagger UI, ReDoc)
         csp_directives = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline'",  # Adjust based on your needs
-            "style-src 'self' 'unsafe-inline'",
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",  # Allow CDN for docs
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",   # Allow CDN for docs
             "img-src 'self' data: https:",
-            "font-src 'self'",
+            "font-src 'self' https://cdn.jsdelivr.net",  # Allow CDN fonts
             "connect-src 'self'",
             "frame-ancestors 'none'",  # Equivalent to X-Frame-Options: DENY
             "base-uri 'self'",

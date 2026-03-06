@@ -85,6 +85,27 @@ except Exception as e:
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
+@app.get("/", tags=["Root"])
+async def root():
+    """Root endpoint - provides API information and documentation links."""
+    return {
+        "message": "Welcome to MarketPulse API",
+        "version": "1.0.0",
+        "documentation": {
+            "swagger_ui": "/docs",
+            "redoc": "/redoc",
+            "openapi_json": f"{settings.API_V1_STR}/openapi.json"
+        },
+        "endpoints": {
+            "health": "/health",
+            "auth": f"{settings.API_V1_STR}/auth",
+            "watchlists": f"{settings.API_V1_STR}/watchlists",
+            "market": f"{settings.API_V1_STR}/market",
+            "admin": f"{settings.API_V1_STR}/admin"
+        }
+    }
+
+
 @app.get("/health", tags=["Health"])
 async def health_check():
     """Health check endpoint for deployment monitoring."""

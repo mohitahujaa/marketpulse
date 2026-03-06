@@ -785,7 +785,6 @@ pytest tests/test_auth.py -v       # Run specific test file with verbose output
 
 | Requirement | Expected | Delivered | Exceeded By |
 |-------------|----------|-----------|-------------|
-| **Time Investment** | 2 hours | Production-grade implementation | Advanced security, testing, docs |
 | **Backend APIs** | Basic CRUD | Full-featured with versioning | Rate limiting, retry logic, caching |
 | **Frontend UI** | Simple forms | Complete React SPA | Context API, interceptors, protected routes |
 | **Authentication** | Basic JWT | JWT + refresh tokens | Account lockout, timing-attack prevention |
@@ -815,13 +814,13 @@ Building this project demonstrates expertise in:
 
 ## 📬 Contact & Submission
 
-**Repository**: [GitHub - MarketPulse](https://github.com/YOUR_USERNAME/marketpulse)  
+**Repository**: [GitHub - MarketPulse](https://github.com/mohitahujaa/marketpulse)  
 **Live Demo**: [Coming Soon - Deploy to Render/Railway]  
 **API Docs**: http://localhost:8000/docs (when running locally)  
 
-**Developer**: [Your Name]  
-**Email**: [Your Email]  
-**LinkedIn**: [Your LinkedIn]  
+**Developer**: [Mohit Ahuja]  
+**Email**: [mohitahuja720@gmail.com]  
+**LinkedIn**: [https://www.linkedin.com/in/-mohitahuja/]  
 
 ---
 
