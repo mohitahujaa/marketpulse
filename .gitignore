@@ -201,3 +201,16 @@ cython_debug/
 .venv.backup
 temp/
 tmp/
+
+# Submission artifacts
+SUBMISSION_CHECKLIST.md
+submission_logs_*/
+
+# Test result artifacts
+logs/api.log
+logs/docker-compose.logs
+TEST_SUMMARY.md
+
+# Keep most logs ignored, but allow committed endpoint test report
+!logs/
+!logs/test-results.log
